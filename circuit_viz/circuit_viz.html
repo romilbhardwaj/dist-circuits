@@ -6,7 +6,7 @@
 <body>
     <div id="graph"></div>
     <script>
-        fetch('data/adder_32bit.json').then(res => res.json()).then(data => {
+        fetch('data/2x2bitonic.json').then(res => res.json()).then(data => {
             const Graph = ForceGraph()
             (document.getElementById('graph'))
                 .graphData(data)

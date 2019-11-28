@@ -1,9 +1,25 @@
 {
     "nodes": [
-        {"id": "test1", "group": 1},
-        {"id": "test2", "group": 2}
+        {"id": "center", "group": 0},
+        {"id": "a1", "group": 1},
+        {"id": "a2", "group": 1},
+        {"id": "a3", "group": 1},
+        {"id": "b1", "group": 2},
+        {"id": "b2", "group": 2},
+        {"id": "b3", "group": 2},
+        {"id": "c1", "group": 3},
+        {"id": "c2", "group": 3},
+        {"id": "c3", "group": 3}
     ],
     "links": [
-        {"source": "test1", "target": "test2", "value": 1}
+        {"source": "a2", "target": "a1", "value": 1},
+        {"source": "a3", "target": "a1", "value": 1},
+        {"source": "b2", "target": "b1", "value": 1},
+        {"source": "b3", "target": "b1", "value": 1},
+        {"source": "c2", "target": "c1", "value": 1},
+        {"source": "c3", "target": "c1", "value": 1},
+        {"source": "a1", "target": "center", "value": 1},
+        {"source": "b1", "target": "center", "value": 1},
+        {"source": "c1", "target": "center", "value": 1}
     ]
 }

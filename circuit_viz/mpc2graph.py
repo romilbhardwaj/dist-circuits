@@ -55,7 +55,6 @@ for i, l in enumerate(in_lines[3:]):
     })
 
     for iw in input_wires:
-        print(iw)
         if iw < num_a_inputs:
             links.append({
                 "source": "INPUT_A_"+str(iw),
