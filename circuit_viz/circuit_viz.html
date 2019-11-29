@@ -6,10 +6,14 @@
 <body>
     <div id="graph"></div>
     <script>
-        fetch('data/2x2bitonic.json').then(res => res.json()).then(data => {
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var c = url.searchParams.get("graph");
+        fetch('data/'+c+'.json').then(res => res.json()).then(data => {
             const Graph = ForceGraph()
             (document.getElementById('graph'))
                 .graphData(data)
+                .d3VelocityDecay(0.2)
                 .nodeLabel('id')
                 .nodeAutoColorBy('group')
                 .linkDirectionalParticles("value")
