@@ -6,7 +6,7 @@ from itertools import permutations
 GAMMA = 4
 
 def to_networkx(graph_json):
-    G = nx.Graph()
+    G = nx.DiGraph()
 
     for n in graph["nodes"]:
         G.add_node(n["id"])
@@ -81,12 +81,10 @@ def vertex_assignment(G, vertex, partition_list):
 
     for i in range(len(partition_list)):
         dg = delta_g(G, vertex, i, partition_list)
-        print("partition", i, "dg =", dg)
         if dg > max_dg:
             max_dg = dg
             max_partition = i
 
-    print("max partition for node", vertex,"->", max_partition)
     return max_partition
 
 
@@ -95,7 +93,19 @@ def fennel(G, n_partitions):
     partitions = [[] for i in range(n_partitions)]
 
     for v in G:
-        partitions[vertex_assignment(G, v, partitions)].append(v)
+        if "INPUT" in v or "OUTPUT" in v:
+            continue
+
+        assignment = vertex_assignment(G, v, partitions)
+
+        partitions[assignment].append(v)
+        for pre in G.predecessors(v):
+            if "INPUT" in pre:
+                partitions[assignment].append(pre)
+
+        for post in G.successors(v):
+            if "OUTPUT" in post:
+                partitions[assignment].append(post)
 
     return G, partitions
     
