@@ -1,0 +1,7 @@
+## Build
+
+`make`
+
+## Run
+
+`./partition <path to raw MPC circuit file> <path to folder for output circuit files> <number of partitions>`
