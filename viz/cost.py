@@ -66,9 +66,9 @@ def get_subcluster_idx(subclusters, n):
                 return i
 
 
-AND_COST = 331
-XOR_COST = 41
-INV_COST = 41
+AND_COST = 8
+XOR_COST = 2
+INV_COST = 1
 
 def _schedule_gates(cluster_states, completed_gates):
     for state in cluster_states:
@@ -133,53 +133,70 @@ def rough_sim(args, G, out, distributed=True):
 
 
 def stats(args, G, out):
-    if args.verbose:
-        print('\n', file = out)
-    
+
+    memory_costs = []
+    for i in range(32):
+        memory_costs.append(0)
+
+    for n in G:
+        cluster = n[1]
+        gate = n[0]
+
+        if "INV" in gate or "XOR" in gate:
+            memory_costs[cluster] += 32
+        elif "AND" in gate:
+            memory_costs[cluster] += 237
+
+    for i in range(32):
+        print("cluster", i, "memory cost:", memory_costs[i])
+
     subclusters = get_subclusters(G)
     counter = Counter([sc[0][1] for sc in subclusters])
     if args.verbose:
-        print("--- Cluster Summary ---", file = out)
+        #print("--- Cluster Summary ---", file = out)
         for cluster_n in counter:
             nodes = sum([len(sc) for sc in subclusters if sc[0][1] == cluster_n])
-            print(str(cluster_n)+")", nodes, "nodes ["+str(counter[cluster_n])+" subcluster(s)]", file = out)
+            #print(str(cluster_n)+")", nodes, "nodes ["+str(counter[cluster_n])+" subcluster(s)]", file = out)
             for i, sc in enumerate(subclusters):
                 if sc[0][1] != cluster_n:
                     continue
-                print("\tSub-cluster", str(i)+":", len(sc), "node(s)", file = out)
-        print('\n', file = out)
+                #print("\tSub-cluster", str(i)+":", len(sc), "node(s)", file = out)
+        #print('\n', file = out)
 
     counter = Counter([(e[0][1], e[1][1]) for e in G.edges() if e[0][1] != e[1][1]])
     if not args.verbose:
-        print(sum(counter.values()), file = out)
+        #print(sum(counter.values()), file = out)
+        pass
     else:
-        print("--- Cluster Summary ---", file = out)
-        print("Total cross-cluster edge(s):", sum(counter.values()), file = out)
+        #print("--- Cluster Summary ---", file = out)
+        #print("Total cross-cluster edge(s):", sum(counter.values()), file = out)
         for e_count in counter:
-            print("\t"+str(e_count[0])+" -> "+str(e_count[1])+":", counter[e_count], "edge(s)", file = out)
-        print('\n', file = out)
+            #print("\t"+str(e_count[0])+" -> "+str(e_count[1])+":", counter[e_count], "edge(s)", file = out)
+            pass
+        #$print('\n', file = out)
 
         counter = Counter([(get_subcluster_idx(subclusters, e[0][0]), get_subcluster_idx(subclusters, e[1][0])) for e in G.edges() if e[0][1] != e[1][1]])
-        print("Total cross-sub-cluster edge(s):", sum(counter.values()), file = out)
+        #print("Total cross-sub-cluster edge(s):", sum(counter.values()), file = out)
 
         subcluster_G = nx.DiGraph()
         for i in range(len(subclusters)):
             subcluster_G.add_node(i)
 
         for e_count in counter:
-            print("\t"+str(e_count[0])+" (cluster " + str(subclusters[e_count[0]][0][1]) + ") -> "+str(e_count[1])+" (cluster " + str(subclusters[e_count[1]][0][1]) + "):", counter[e_count], "edge(s)", file = out)
+            #print("\t"+str(e_count[0])+" (cluster " + str(subclusters[e_count[0]][0][1]) + ") -> "+str(e_count[1])+" (cluster " + str(subclusters[e_count[1]][0][1]) + "):", counter[e_count], "edge(s)", file = out)
             subcluster_G.add_edge(e_count[0], e_count[1])
 
-        print('\n', file = out)
+        #print('\n', file = out)
         try:
             path = nx.dag_longest_path(subcluster_G)
-            print("Longest sub-cluster path:", path, "(length =", str(len(path))+")", file = out)
+            #print("Longest sub-cluster path:", path, "(length =", str(len(path))+")", file = out)
         except:
-            print("Sub-cluster graph has cycles", file = out) 
-        print('\n', file = out)
+            #print("Sub-cluster graph has cycles", file = out) 
+            pass
+        #print('\n', file = out)
 
         for i, sc in enumerate(subclusters):
-            print("--- Sub-cluster", i, "Summary ---", file = out)
+            #print("--- Sub-cluster", i, "Summary ---", file = out)
 
             cluster_num = sc[0][1]
 
@@ -213,25 +230,25 @@ def stats(args, G, out):
             sc_view = nx.subgraph_view(G, filter_node = lambda n: n in sc)
             sc_depth = len(nx.dag_longest_path(sc_view))
 
-            print("Input bits:", n_inputs, file = out)
-            print("Incoming edges:", len(incoming_edges), file = out)
+            #print("Input bits:", n_inputs, file = out)
+            #print("Incoming edges:", len(incoming_edges), file = out)
             for e in incoming_edges:
-                print("    From", e[0][0], "| Sub-cluster", e[1], "(Cluster", str(e[0][1])+")", file = out)
-            print("Gates:", file = out)
-            print("    AND:", n_and, file = out)
-            print("    XOR:", n_xor, file = out)
-            print("    INV:", n_inv, file = out)
-            print("Sub-cluster depth:", sc_depth, file = out)
-            print("Output bits:", n_outputs, file = out)
-            print("Outgoing edges:", len(outgoing_edges), file = out)
+                pass
+                #print("    From", e[0][0], "| Sub-cluster", e[1], "(Cluster", str(e[0][1])+")", file = out)
+            #print("Gates:", file = out)
+            #print("    AND:", n_and, file = out)
+            #print("    XOR:", n_xor, file = out)
+            #print("    INV:", n_inv, file = out)
+            #print("Sub-cluster depth:", sc_depth, file = out)
+            #print("Output bits:", n_outputs, file = out)
+            #print("Outgoing edges:", len(outgoing_edges), file = out)
             for e in outgoing_edges:
-                print("    To", e[0][0], "| Sub-cluster", e[1], "(Cluster", str(e[0][1])+")", file = out)
+                #print("    To", e[0][0], "| Sub-cluster", e[1], "(Cluster", str(e[0][1])+")", file = out)
+                pass
 
 
 parser = argparse.ArgumentParser(description="Generate stats on partitioned graphs")
 parser.add_argument("in_json_file", help="Path to input partitioned graph")
-parser.add_argument("--out", help="Path to stats output data file", default=None)
-parser.add_argument("--verbose", help="Print verbose information", action='store_true')
 
 args = parser.parse_args()
 with open(args.in_json_file, 'r') as f:
@@ -239,14 +256,7 @@ with open(args.in_json_file, 'r') as f:
 
 G = to_networkx(graph)
 
-if args.out:
-    with open(args.out, 'w') as f:
-        stats(args, G, f)
-        rough_sim(args, G, f)
-        rough_sim(args, G, f, distributed=False)
-else:
-    stats(args, G, sys.stdout)
-    rough_sim(args, G, sys.stdout)
-    rough_sim(args, G, sys.stdout, distributed=False)
-
+stats(args, G, sys.stdout)
+rough_sim(args, G, sys.stdout)
+rough_sim(args, G, sys.stdout, distributed=False)
 

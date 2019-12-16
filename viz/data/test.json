@@ -1,15 +1,15 @@
 {
     "nodes": [
         {"id": "center", "group": 0},
-        {"id": "a1", "group": 1},
-        {"id": "a2", "group": 1},
-        {"id": "a3", "group": 1},
-        {"id": "b1", "group": 2},
-        {"id": "b2", "group": 2},
-        {"id": "b3", "group": 2},
-        {"id": "c1", "group": 3},
-        {"id": "c2", "group": 3},
-        {"id": "c3", "group": 3}
+        {"id": "a1", "group": 0},
+        {"id": "a2", "group": 0},
+        {"id": "a3", "group": 0},
+        {"id": "b1", "group": 0},
+        {"id": "b2", "group": 0},
+        {"id": "b3", "group": 0},
+        {"id": "c1", "group": 0},
+        {"id": "c2", "group": 0},
+        {"id": "c3", "group": 0}
     ],
     "links": [
         {"source": "a2", "target": "a1", "value": 1},
